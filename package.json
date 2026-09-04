@@ -1,0 +1,24 @@
+{
+	"name": "@matrix-nebu/monorepo",
+	"version": "1.0.0",
+	"private": true,
+	"description": "Root configuration for the pnpm workspace",
+	"scripts": {
+		"build": "tsc -b",
+		"check": "tsc -b --pretty",
+		"format": "prettier . --write",
+		"format:check": "prettier . --check"
+	},
+	"license": "MIT",
+	"devEngines": {
+		"packageManager": {
+			"name": "pnpm",
+			"version": "^11.22.0",
+			"onFail": "download"
+		}
+	},
+	"devDependencies": {
+		"prettier": "^3.9.6",
+		"typescript": "^7.0.2"
+	}
+}

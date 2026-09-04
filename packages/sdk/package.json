@@ -1,0 +1,13 @@
+{
+	"name": "@matrix-nebu/sdk",
+	"version": "0.1.0",
+	"description": "A next-generation TypeScript SDK for the Matrix Client-Server API",
+	"scripts": {},
+	"keywords": [
+		"matrix",
+		"sdk",
+		"typescript"
+	],
+	"license": "MIT",
+	"type": "module"
+}

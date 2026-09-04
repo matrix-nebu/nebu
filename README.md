@@ -1,2 +1,3 @@
-# nebu
-A modern Matrix SDK for TypeScript.
+# Nebu
+
+A modern Matrix SDK and bot framework for TypeScript.
