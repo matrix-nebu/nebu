@@ -122,25 +122,42 @@ export const KnownErrorCode = {
 } as const;
 export type KnownErrorCode = (typeof KnownErrorCode)[keyof typeof KnownErrorCode];
 
-export type ErrorCode = KnownErrorCode | (string & {});
+export const ErrorCodeWithSpecialData = type.valueOf([
+	KnownErrorCode.ResourceLimitExceeded,
+	KnownErrorCode.UnknownToken,
+	KnownErrorCode.UserLimitExceeded,
+] as const);
+export type ErrorCodeWithSpecialData = Exclude<
+	KnownErrorCode,
+	"M_RESOURCE_LIMIT_EXCEEDED" | "M_UNKNOWN_TOKEN" | "M_USER_LIMIT_EXCEEDED"
+>;
+
+export const StandardErrorCode = type.valueOf(KnownErrorCode).exclude(ErrorCodeWithSpecialData);
+export type StandardErrorCode = typeof StandardErrorCode.infer;
 
 export const StandardErrorResponse = type({
-	errcode: type.valueOf(KnownErrorCode),
+	errcode: StandardErrorCode,
 	error: "string",
 });
 export type StandardErrorResponse = typeof StandardErrorResponse.infer;
 
-export const ResourceLimitExceededErrorResponse = StandardErrorResponse.and({
+export const ResourceLimitExceededErrorResponse = type({
+	errcode: '"M_RESOURCE_LIMIT_EXCEEDED"',
+	error: "string",
 	admin_contact: "string",
 });
 export type ResourceLimitExceededErrorResponse = typeof ResourceLimitExceededErrorResponse.infer;
 
-export const UnknownTokenErrorResponse = StandardErrorResponse.and({
+export const UnknownTokenErrorResponse = type({
+	errcode: '"M_UNKNOWN_TOKEN"',
+	error: "string",
 	soft_logout: "boolean",
 });
 export type UnknownTokenErrorResponse = typeof UnknownTokenErrorResponse.infer;
 
-export const UserLimitExceededErrorResponse = StandardErrorResponse.and({
+export const UserLimitExceededErrorResponse = type({
+	errcode: '"M_USER_LIMIT_EXCEEDED"',
+	error: "string",
 	info_uri: "string",
 	can_upgrade: "boolean",
 });
