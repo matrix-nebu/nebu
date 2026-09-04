@@ -1,5 +1,6 @@
 /.direnv
 /.envrc
+/docs
 node_modules/
 dist/
 *.tsbuildinfo
