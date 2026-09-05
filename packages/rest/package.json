@@ -1,11 +1,11 @@
 {
-	"name": "@matrix-nebu/sdk",
+	"name": "@matrix-nebu/rest",
 	"version": "0.1.0",
-	"description": "A next-generation TypeScript SDK for the Matrix Client-Server API",
+	"description": "Matrix Client-Server API REST client",
 	"scripts": {},
 	"keywords": [
 		"matrix",
-		"sdk",
+		"rest",
 		"typescript"
 	],
 	"license": "MIT",
@@ -17,7 +17,7 @@
 		}
 	},
 	"dependencies": {
-		"@matrix-nebu/rest": "workspace:^",
-		"@matrix-nebu/types": "workspace:^"
+		"@matrix-nebu/types": "workspace:^",
+		"arktype": "^2.2.3"
 	}
 }

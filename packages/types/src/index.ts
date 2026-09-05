@@ -1,3 +1,1 @@
-import * as error from "./error.js";
-
-export { error };
+export * from "./error.js";

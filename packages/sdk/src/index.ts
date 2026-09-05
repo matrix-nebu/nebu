@@ -1,2 +1,1 @@
-/** test */
-export const hello = "test";
+export * from "./client.js";

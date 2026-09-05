@@ -1,0 +1,106 @@
+import type {
+	AnyEndpoint,
+	EndpointPathParams,
+	EndpointQueryParams,
+	EndpointRequestBody,
+	EndpointResponseBody,
+} from "../endpoint.js";
+import { ErrorResponse } from "@matrix-nebu/types";
+import { type } from "arktype";
+
+export class HttpClient {
+	constructor(
+		private readonly baseUrl: string,
+		private readonly fetch: typeof globalThis.fetch = globalThis.fetch,
+	) {}
+
+	async request<E extends AnyEndpoint>(
+		endpoint: E,
+		params: EndpointPathParams<E> & EndpointQueryParams<E> & EndpointRequestBody<E>,
+	): Promise<EndpointResponseBody<E>> {
+		// substitute path parameters in the endpoint URL
+		let url = endpoint.endpoint;
+		if (endpoint.path && params) {
+			for (const key of Object.keys(endpoint.path)) {
+				const value = (params as Record<string, unknown>)[key];
+				if (value === undefined) {
+					throw new Error(`Missing path parameter: ${key}`);
+				}
+				url = url.replace(`{${key}}`, encodeURIComponent(String(value)));
+			}
+		}
+
+		// append query parameters to the URL
+		const queryParams: Record<string, string> = {};
+		if (endpoint.query && params) {
+			for (const key of Object.keys(endpoint.query)) {
+				const value = (params as Record<string, unknown>)[key];
+				if (value !== undefined) {
+					queryParams[key] = String(value);
+				}
+			}
+		}
+
+		const queryString = new URLSearchParams(queryParams).toString();
+		if (queryString) {
+			url += `?${queryString}`;
+		}
+
+		// prepare the request options
+		const requestOptions: RequestInit = {
+			method: endpoint.method,
+			headers: {
+				"Content-Type": "application/json",
+			},
+		};
+
+		// include the request body if applicable
+		if (endpoint.body && params) {
+			const bodyParams: Record<string, unknown> = {};
+			for (const key of Object.keys(endpoint.body)) {
+				const value = (params as Record<string, unknown>)[key];
+				if (value !== undefined) {
+					bodyParams[key] = value;
+				}
+			}
+			requestOptions.body = JSON.stringify(bodyParams);
+		}
+
+		// make the HTTP request
+		const response = await this.fetch(`${this.baseUrl}${url}`, requestOptions);
+
+		// check for HTTP errors
+		if (!response.ok) {
+			// try to parse the error response as a Matrix error
+			let json: unknown;
+			try {
+				json = await response.json();
+			} catch {
+				throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
+			}
+
+			let mxError = ErrorResponse(json);
+			if (mxError instanceof type.errors) {
+				throw new Error(`Got unexpected error response: ${JSON.stringify(json)}`);
+			}
+
+			throw new Error(
+				`HTTP error ${response.status}: ${response.statusText} - ${mxError.errcode}: ${mxError.error}`,
+			);
+		}
+
+		// parse the response body as JSON
+		let json;
+		try {
+			json = await response.json();
+		} catch {
+			throw new Error(`Failed to parse JSON response from ${endpoint.endpoint}`);
+		}
+		const responseBody = endpoint.response(json);
+		if (responseBody instanceof type.errors) {
+			throw new Error(`Got unexpected response body: ${JSON.stringify(json)}`);
+		} else {
+			return responseBody as EndpointResponseBody<E>;
+		}
+	}
+}
