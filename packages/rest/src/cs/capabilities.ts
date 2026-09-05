@@ -36,7 +36,7 @@ export const GetCapabilities = endpoint({
 	endpoint: "/_matrix/client/capabilities",
 
 	response: type({
-		capabilities: "string[]",
+		capabilities: Capabilities,
 		unstable_features: "Record<string, boolean>",
 	}),
 });
