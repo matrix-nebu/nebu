@@ -3,10 +3,16 @@ import { ErrorResponse } from "@matrix-nebu/types";
 import { type } from "arktype";
 
 export class HttpClient {
+	private bearerToken: string | null = null;
+
 	constructor(
 		private readonly baseUrl: string,
 		private readonly fetch: typeof globalThis.fetch = globalThis.fetch,
 	) {}
+
+	setBearerToken(token: string | null): void {
+		this.bearerToken = token;
+	}
 
 	async request<Path, Query, Body, Response, E extends Endpoint<Path, Query, Body, Response>>(
 		endpoint: E,
@@ -47,6 +53,12 @@ export class HttpClient {
 				"Content-Type": "application/json",
 			},
 		};
+		if (this.bearerToken) {
+			requestOptions.headers = {
+				...requestOptions.headers,
+				Authorization: `Bearer ${this.bearerToken}`,
+			};
+		}
 
 		// include the request body if applicable
 		if (endpoint.body && params) {
