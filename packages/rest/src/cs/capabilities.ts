@@ -17,18 +17,22 @@ export const RoomVersionsCapability = type({
 	default: "string",
 });
 
+export const BooleanCapability = type({
+	enabled: "boolean",
+});
+
 export const Capabilities = type({
-	"m.3pid_changes?": "boolean",
+	"m.3pid_changes?": BooleanCapability,
 	"m.account_moderation?": AccountModerationCapability,
-	"m.change_password?": "boolean",
-	"m.forget_forced_upon_leave?": "boolean",
-	"m.get_login_token?": "boolean",
+	"m.change_password?": BooleanCapability,
+	"m.forget_forced_upon_leave?": BooleanCapability,
+	"m.get_login_token?": BooleanCapability,
 	"m.profile_fields?": ProfileFieldsCapability,
 	"m.room_versions?": RoomVersionsCapability,
 	/** @deprecated */
-	"m.set_avatar_url?": "boolean",
+	"m.set_avatar_url?": BooleanCapability,
 	/** @deprecated */
-	"m.set_displayname?": "boolean",
+	"m.set_displayname?": BooleanCapability,
 });
 
 export const GetCapabilities = endpoint({
