@@ -1,10 +1,4 @@
-import type {
-	AnyEndpoint,
-	EndpointPathParams,
-	EndpointQueryParams,
-	EndpointRequestBody,
-	EndpointResponseBody,
-} from "../endpoint.js";
+import type { Endpoint } from "../endpoint.js";
 import { ErrorResponse } from "@matrix-nebu/types";
 import { type } from "arktype";
 
@@ -14,10 +8,10 @@ export class HttpClient {
 		private readonly fetch: typeof globalThis.fetch = globalThis.fetch,
 	) {}
 
-	async request<E extends AnyEndpoint>(
+	async request<Path, Query, Body, Response, E extends Endpoint<Path, Query, Body, Response>>(
 		endpoint: E,
-		params: EndpointPathParams<E> & EndpointQueryParams<E> & EndpointRequestBody<E>,
-	): Promise<EndpointResponseBody<E>> {
+		params: Path & Query & Body,
+	): Promise<Response> {
 		// substitute path parameters in the endpoint URL
 		let url = endpoint.endpoint;
 		if (endpoint.path && params) {
@@ -100,7 +94,7 @@ export class HttpClient {
 		if (responseBody instanceof type.errors) {
 			throw new Error(`Got unexpected response body: ${JSON.stringify(json)}`);
 		} else {
-			return responseBody as EndpointResponseBody<E>;
+			return responseBody as Response;
 		}
 	}
 }
