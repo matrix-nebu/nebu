@@ -1,12 +1,12 @@
 import { type } from "arktype";
-import { endpoint } from "../endpoint.js";
+import { Endpoint } from "../endpoint.js";
 
-export const GetVersions = endpoint({
+export const GetVersions = new Endpoint({
 	method: "GET",
 	endpoint: "/_matrix/client/versions",
 
-	response: type({
+	response: {
 		versions: "string[]",
 		unstable_features: "Record<string, boolean>",
-	}),
+	},
 });

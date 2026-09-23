@@ -1,5 +1,5 @@
 import { type } from "arktype";
-import { endpoint } from "../endpoint.js";
+import { Endpoint } from "../endpoint.js";
 
 export const AccountModerationCapability = type({
 	lock: "boolean = false",
@@ -35,12 +35,12 @@ export const Capabilities = type({
 	"m.set_displayname?": BooleanCapability,
 });
 
-export const GetCapabilities = endpoint({
+export const GetCapabilities = new Endpoint({
 	method: "GET",
 	endpoint: "/_matrix/client/capabilities",
 
-	response: type({
+	response: {
 		capabilities: Capabilities,
 		unstable_features: "Record<string, boolean>",
-	}),
+	},
 });

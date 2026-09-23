@@ -8,7 +8,9 @@
 		"check": "tsc -b --pretty",
 		"format": "prettier . --write",
 		"format:check": "prettier . --check",
-		"docs": "typedoc --options ./typedoc.config.mjs"
+		"docs": "typedoc --options ./typedoc.config.mjs",
+		"test": "vitest run",
+		"test:watch": "vitest watch"
 	},
 	"license": "MIT",
 	"devEngines": {
@@ -21,7 +23,9 @@
 	"devDependencies": {
 		"prettier": "^3.9.6",
 		"typedoc": "^0.28.20",
-		"typescript": "^6.0.3"
+		"typescript": "^6.0.3",
+		"vite": "^8.3.0",
+		"vitest": "^5.0.1"
 	},
 	"type": "module"
 }

@@ -14,41 +14,14 @@ export class HttpClient {
 		this.bearerToken = token;
 	}
 
-	async request<Path, Query, Body, Response, E extends Endpoint<Path, Query, Body, Response>>(
+	async request<Path, Query, Req, Resp, E extends Endpoint<Path, Query, Req, Resp>>(
 		endpoint: E,
-		params: Path & Query & Body,
-	): Promise<Response> {
-		// substitute path parameters in the endpoint URL
-		let url = endpoint.endpoint;
-		if (endpoint.path && params) {
-			for (const key of Object.keys(endpoint.path)) {
-				const value = (params as Record<string, unknown>)[key];
-				if (value === undefined) {
-					throw new Error(`Missing path parameter: ${key}`);
-				}
-				url = url.replace(`{${key}}`, encodeURIComponent(String(value)));
-			}
-		}
+		params: Path & Query & Req,
+	): Promise<Resp> {
+		let request = endpoint.toRequest(params);
 
-		// append query parameters to the URL
-		const queryParams: Record<string, string> = {};
-		if (endpoint.query && params) {
-			for (const key of Object.keys(endpoint.query)) {
-				const value = (params as Record<string, unknown>)[key];
-				if (value !== undefined) {
-					queryParams[key] = String(value);
-				}
-			}
-		}
-
-		const queryString = new URLSearchParams(queryParams).toString();
-		if (queryString) {
-			url += `?${queryString}`;
-		}
-
-		// prepare the request options
 		const requestOptions: RequestInit = {
-			method: endpoint.method,
+			method: request.method,
 			headers: {
 				"Content-Type": "application/json",
 			},
@@ -60,20 +33,12 @@ export class HttpClient {
 			};
 		}
 
-		// include the request body if applicable
-		if (endpoint.body && params) {
-			const bodyParams: Record<string, unknown> = {};
-			for (const key of Object.keys(endpoint.body)) {
-				const value = (params as Record<string, unknown>)[key];
-				if (value !== undefined) {
-					bodyParams[key] = value;
-				}
-			}
-			requestOptions.body = JSON.stringify(bodyParams);
+		if (request.body !== undefined) {
+			requestOptions.body = JSON.stringify(request.body);
 		}
 
 		// make the HTTP request
-		const response = await this.fetch(`${this.baseUrl}${url}`, requestOptions);
+		const response = await this.fetch(`${this.baseUrl}${request.path}`, requestOptions);
 
 		// check for HTTP errors
 		if (!response.ok) {
@@ -106,7 +71,7 @@ export class HttpClient {
 		if (responseBody instanceof type.errors) {
 			throw new Error(`Got unexpected response body: ${JSON.stringify(json)}`);
 		} else {
-			return responseBody as Response;
+			return responseBody as Resp;
 		}
 	}
 }
