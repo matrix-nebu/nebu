@@ -6,18 +6,26 @@
 }:
 let
   inherit (nixhooks.lib.${system}) presets mkHooks;
+  inherit (pkgs) lib;
+
+  scripts = import ./scripts { inherit pkgs; };
 in
 mkHooks {
   hooks = {
     nixfmt = {
-      entry = "${pkgs.nixfmt}/bin/nixfmt";
+      entry = lib.getExe pkgs.nixfmt;
       args = [ "--check" ];
       files = "\\.nix$";
       serial = false;
     };
 
     prettier = presets.prettier {
-      entry = "${pkgs.prettier}/bin/prettier";
+      entry = lib.getExe pkgs.prettier;
+    };
+
+    signoff = {
+      entry = lib.getExe scripts.check-signoff;
+      stages = [ "commit-msg" ];
     };
   };
 
