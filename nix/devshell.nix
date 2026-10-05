@@ -1,10 +1,17 @@
-{ pkgs, ... }:
+args@{ pkgs, ... }:
+let
+  hooks = import ./hooks.nix args;
+in
 {
-  default = pkgs.mkShell {
-    buildInputs = with pkgs; [
-      nixfmt
-      nodejs
-      pnpm
-    ];
-  };
+  default = hooks.wrapShell (
+    pkgs.mkShell {
+      buildInputs = with pkgs; [
+        nodejs
+        pnpm
+
+        prettier
+        nixfmt
+      ];
+    }
+  );
 }
