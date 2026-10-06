@@ -29,15 +29,22 @@ mkHooks {
     };
   };
 
-  settings.githubActions = {
-    enable = true;
-    attr = "run-hooks";
-    flake = true;
-    runsOn = "ubuntu-latest";
-    cache = true;
-    on = {
-      push.branches = [ "main" ];
-      pull_request.branches = [ "main" ];
+  settings = {
+    portable = {
+      enable = true;
+      dir = ".hooks";
+    };
+
+    githubActions = {
+      enable = true;
+      attr = "run-hooks";
+      flake = true;
+      runsOn = "ubuntu-latest";
+      cache = true;
+      on = {
+        push.branches = [ "main" ];
+        pull_request.branches = [ "main" ];
+      };
     };
   };
 }
