@@ -317,8 +317,19 @@ nixhooks_reconcile_worktree() {
 }
 
 nixhooks_generated_hooks() {
+nixhooks_hook_signoff() (
+set +e +u +o pipefail
+#!/usr/bin/env bash
+
+if ! grep -q '^Signed-off-by: ' "$1"; then
+    echo "error: commit message is missing a Signed-off-by trailer."
+    echo "       use 'git commit -s' to add one."
+    exit 1
+fi
+
+)
   nixhooks_precompute_matches '.*' '^$'
-  run_hook signoff '.*' '^$' 1 0 1 check-signoff /nix/store/nkzmmcsmbrwrac5ajji56wfb6iw0521k-check-signoff/bin/check-signoff '' || true
+  run_hook signoff '.*' '^$' 1 0 1 '' nixhooks_hook_signoff '' || true
 }
 
 # shellcheck shell=bash

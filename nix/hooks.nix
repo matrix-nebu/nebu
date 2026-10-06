@@ -24,7 +24,7 @@ mkHooks {
     };
 
     signoff = {
-      entry = lib.getExe scripts.check-signoff;
+      script = builtins.readFile ./scripts/check-signoff.sh;
       stages = [ "commit-msg" ];
     };
   };
