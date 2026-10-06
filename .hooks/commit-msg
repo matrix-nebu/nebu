@@ -317,6 +317,17 @@ nixhooks_reconcile_worktree() {
 }
 
 nixhooks_generated_hooks() {
+nixhooks_hook_scoped() (
+set +e +u +o pipefail
+#!/usr/bin/env bash
+
+if ! head -n1 "$1" | grep -Eq '^[^:[:space:]]+: .+'; then
+    echo "error: commit message must be formatted as '<scope>: <description>'."
+    echo "       see https://scopedcommits.com"
+    exit 1
+fi
+
+)
 nixhooks_hook_signoff() (
 set +e +u +o pipefail
 #!/usr/bin/env bash
@@ -329,6 +340,7 @@ fi
 
 )
   nixhooks_precompute_matches '.*' '^$'
+  run_hook scoped '.*' '^$' 1 0 1 '' nixhooks_hook_scoped '' || true
   run_hook signoff '.*' '^$' 1 0 1 '' nixhooks_hook_signoff '' || true
 }
 

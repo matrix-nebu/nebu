@@ -27,6 +27,11 @@ mkHooks {
       script = builtins.readFile ./scripts/check-signoff.sh;
       stages = [ "commit-msg" ];
     };
+
+    scoped = {
+      script = builtins.readFile ./scripts/check-scoped.sh;
+      stages = [ "commit-msg" ];
+    };
   };
 
   settings = {
