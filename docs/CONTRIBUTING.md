@@ -4,8 +4,7 @@ Thanks for taking the time to contribute to Nebu!
 
 ## Looking for help?
 
-Join our Matrix room, [#nebu:zirco.dev](https://matrix.to/#/#nebu:zirco.dev)
-([URI](matrix:r/nebu:zirco.dev))!
+Join our Matrix room, [#nebu:zirco.dev](https://matrix.to/#/#nebu:zirco.dev)!
 
 ## Reporting issues
 
