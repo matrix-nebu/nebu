@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790778492,
-        "narHash": "sha256-s7/FJeOJsK24UYqi9I0KY/av4bJtVblAAgNKWfZ5YSo=",
+        "lastModified": 1791223826,
+        "narHash": "sha256-NXzJMwDal5StlIRZBhh4sWXDfdp+J1cZQUtAIuDQ8Lw=",
         "ref": "refs/heads/main",
-        "rev": "35313de1813e9dc36ad3394065c3143f49fdf191",
-        "revCount": 43,
+        "rev": "44ed38922c390770a56e572165c49baa7322adfc",
+        "revCount": 45,
         "type": "git",
         "url": "https://tangled.org/poacher.dev/nixhooks"
       },
