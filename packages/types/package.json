@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"description": "Types and validators for Matrix Client-Server API objects",
 	"scripts": {
-		"lint": "eslint src --fix"
+		"lint": "eslint src"
 	},
 	"keywords": [
 		"matrix",

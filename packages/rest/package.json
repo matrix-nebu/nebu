@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"description": "Matrix Client-Server API REST client",
 	"scripts": {
-		"lint": "eslint src --fix"
+		"lint": "eslint src"
 	},
 	"keywords": [
 		"matrix",

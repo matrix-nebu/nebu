@@ -6,8 +6,8 @@
 	"scripts": {
 		"build": "tsc -b",
 		"check": "tsc -b --pretty",
-		"format": "prettier . --write",
-		"format:check": "prettier . --check",
+		"lint:check": "pnpm run -r lint",
+		"lint": "pnpm run -r lint --fix",
 		"docs": "typedoc --options ./typedoc.config.mjs --out ./typedoc-docs",
 		"test": "vitest run --typecheck",
 		"test:watch": "vitest watch --typecheck"
