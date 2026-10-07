@@ -7,8 +7,6 @@
 let
   inherit (nixhooks.lib.${system}) presets mkHooks;
   inherit (pkgs) lib;
-
-  scripts = import ./scripts { inherit pkgs; };
 in
 mkHooks {
   hooks = {

@@ -2,7 +2,9 @@
 	"name": "@matrix-nebu/rest",
 	"version": "0.1.0",
 	"description": "Matrix Client-Server API REST client",
-	"scripts": {},
+	"scripts": {
+		"lint": "eslint src --fix"
+	},
 	"keywords": [
 		"matrix",
 		"rest",
