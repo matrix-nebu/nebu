@@ -1,3 +1,3 @@
-import config from "./packages/eslint/dist/index.js";
+import config from "./packages/eslint/src/index.ts";
 
 export default [...config];

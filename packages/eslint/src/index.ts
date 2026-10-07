@@ -34,4 +34,9 @@ export default defineConfig([
 		language: "markdown/gfm",
 		extends: ["markdown/recommended"],
 	},
+	{
+		rules: {
+			eqeqeq: "error",
+		},
+	},
 ]);

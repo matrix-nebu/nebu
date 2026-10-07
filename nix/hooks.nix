@@ -17,8 +17,16 @@ mkHooks {
       serial = false;
     };
 
-    prettier = presets.prettier {
-      entry = lib.getExe pkgs.prettier;
+    eslint = {
+      entry = lib.getExe pkgs.pnpm;
+      args = [
+        "run"
+        "-r"
+        "lint"
+      ];
+      files = "\\.(ts|tsx|js|mjs|cjs)$";
+      serial = true;
+      pass_filenames = false;
     };
 
     signoff = {

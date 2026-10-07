@@ -10,6 +10,7 @@ in
         pnpm
 
         prettier
+        eslint
         nixfmt
       ];
     }
