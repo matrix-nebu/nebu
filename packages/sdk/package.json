@@ -19,7 +19,6 @@
 		}
 	},
 	"dependencies": {
-		"@matrix-nebu/rest": "workspace:^",
-		"@matrix-nebu/types": "workspace:^"
+		"@matrix-nebu/api": "workspace:^"
 	}
 }

@@ -3,7 +3,7 @@ import { OptionDefaults } from "typedoc";
 /** @type {import("typedoc").TypeDocOptions} */
 const config = {
 	entryPointStrategy: "packages",
-	entryPoints: ["packages/sdk", "packages/types", "packages/rest"],
+	entryPoints: ["packages/sdk", "packages/api"],
 
 	plugin: ["./typedoc/plugin.ts"],
 

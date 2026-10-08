@@ -4,14 +4,11 @@
 		{
 			"path": "./packages/sdk"
 		},
-		{
-			"path": "./packages/types"
-		},
-		{
-			"path": "./packages/rest"
+        {
+			"path": "./packages/api"
 		},
 		{
 			"path": "./packages/eslint"
-		}
+        }
 	]
 }
