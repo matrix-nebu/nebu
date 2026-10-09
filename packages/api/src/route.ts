@@ -155,8 +155,8 @@ export class RouteBuilder<
  * @returns A new RouteBuilder instance.
  */
 export function route<
-	Path extends Record<string, unknown> = never,
-	Query extends Record<string, unknown> = never,
+	Path extends object = never,
+	Query extends object = never,
 	Body = never,
 	Response = never,
 >(method: HttpMethod, endpoint: string): RouteBuilder<Path, Query, Body, Response> {

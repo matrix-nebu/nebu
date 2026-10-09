@@ -86,14 +86,14 @@ export interface Capabilities {
 	/** The room versions the server supports. */
 	"m.room_versions": RoomVersionsCapability;
 	/**
-	 * Capability to indicate if the user can change their avatar. Refer to {@link m.profile_fields}
+	 * Capability to indicate if the user can change their avatar. Refer to {@link "m.profile_fields"}
 	 * for extended profile management.
 	 * @deprecated
 	 */
 	"m.set_avatar_url": BooleanCapability;
 	/**
 	 * Capability to indicate if the user can change their display name. Refer to
-	 * {@link m.profile_fields} for extended profile management.
+	 * {@link "m.profile_fields"} for extended profile management.
 	 * @deprecated
 	 */
 	"m.set_displayname": BooleanCapability;
