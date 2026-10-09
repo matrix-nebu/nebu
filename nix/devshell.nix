@@ -9,8 +9,6 @@ in
         nodejs
         pnpm
 
-        prettier
-        eslint
         nixfmt
       ];
     }

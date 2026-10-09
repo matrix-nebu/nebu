@@ -317,9 +317,9 @@ nixhooks_reconcile_worktree() {
 }
 
 nixhooks_generated_hooks() {
-  nixhooks_precompute_matches '\.(ts|tsx|js|mjs|cjs)$' '^$'
+  nixhooks_precompute_matches '\.(ts|tsx|js|mjs|cjs|md)$' '^$'
   nixhooks_precompute_matches '\.nix$' '^$'
-  run_hook eslint '\.(ts|tsx|js|mjs|cjs)$' '^$' 0 0 1 pnpm /nix/store/z0rlx5672gdlfb3830irk026yfwz8kyp-pnpm-11.22.0/bin/pnpm '' run -r lint || true
+  run_hook eslint '\.(ts|tsx|js|mjs|cjs|md)$' '^$' 1 0 1 pnpm /nix/store/z0rlx5672gdlfb3830irk026yfwz8kyp-pnpm-11.22.0/bin/pnpm '' '--reporter=silent' exec eslint --no-warn-ignored || true
   run_hook nixfmt '\.nix$' '^$' 1 0 1 nixfmt /nix/store/958q1ady98nwszsx9z44f1hbk0wid50f-nixfmt-1.4.0/bin/nixfmt '' --check || true
 }
 

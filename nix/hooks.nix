@@ -20,13 +20,14 @@ mkHooks {
     eslint = {
       entry = lib.getExe pkgs.pnpm;
       args = [
-        "run"
-        "-r"
-        "lint"
+        "--reporter=silent"
+        "exec"
+        "eslint"
+        "--no-warn-ignored"
       ];
-      files = "\\.(ts|tsx|js|mjs|cjs)$";
+      files = "\\.(ts|tsx|js|mjs|cjs|md)$";
+      pass_filenames = true;
       serial = true;
-      pass_filenames = false;
     };
 
     signoff = {
