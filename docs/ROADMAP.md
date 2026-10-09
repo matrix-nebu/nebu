@@ -16,7 +16,7 @@ Primary package: `@matrix-nebu/sdk`
 The objective of this phase is to establish solid foundations to build off of, including the basic
 REST client, sync loop, and event sending.
 
-- [ ] Configure further infra for contributors: CI, ESLint, precommit hooks, whatever is needed.
+- [x] Configure further infra for contributors: CI, ESLint, precommit hooks, whatever is needed.
 - [ ] Determine how endpoint-level tests will be written (js-sdk uses a set of request/response
       pairs which must match, that feels messy)
 - [ ] Get rid of the mess LogN started working on
