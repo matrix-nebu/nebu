@@ -2,7 +2,9 @@
 	"name": "@matrix-nebu/sdk",
 	"version": "0.1.0",
 	"description": "A next-generation TypeScript SDK for the Matrix Client-Server API",
-	"scripts": {},
+	"scripts": {
+		"lint": "eslint src"
+	},
 	"keywords": [
 		"matrix",
 		"sdk",

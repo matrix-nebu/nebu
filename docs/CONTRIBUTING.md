@@ -14,6 +14,15 @@ to ask us in our Matrix room listed above.
 
 ## Submitting code
 
+### Hooks
+
+We use [nixhooks](https://tangled.org/poacher.dev/nixhooks) for Git hooks and CI.  
+If you're not using Nix, configure Git to use the portable hooks in the `.hooks` directory:
+
+```sh
+$ git config core.hooksPath .github/hooks
+```
+
 ### Generative Tools Policy
 
 Due to moral, philosophical, environmental, and quality concerns, contributions to the Nebu project

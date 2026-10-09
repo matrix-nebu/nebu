@@ -1,0 +1,2 @@
+# managed-by: nixhooks -- do not edit directly
+{"jobs":{"hooks":{"runs-on":"ubuntu-latest","steps":[{"uses":"actions/checkout@v4"},{"uses":"cachix/install-nix-action@v31"},{"uses":"nix-community/cache-nix-action@v7","with":{"primary-key":"nix-${{ runner.os }}-${{ hashFiles('**/*.nix', 'flake.lock', 'npins/sources.json') }}","restore-prefixes-first-match":"nix-${{ runner.os }}-"}},{"name":"nixhooks: run-hooks","run":"nix run .#run-hooks"}]}},"name":"nixhooks","on":{"pull_request":{"branches":["main"]},"push":{"branches":["main"]}}}
