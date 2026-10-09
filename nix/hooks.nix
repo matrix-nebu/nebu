@@ -10,6 +10,8 @@ let
 in
 mkHooks {
   hooks = {
+    inherit (presets) statix;
+
     nixfmt = {
       entry = lib.getExe pkgs.nixfmt;
       args = [ "--check" ];

@@ -321,6 +321,7 @@ nixhooks_generated_hooks() {
   nixhooks_precompute_matches '\.nix$' '^$'
   run_hook eslint '\.(ts|tsx|js|mjs|cjs|md)$' '^$' 1 0 1 pnpm /nix/store/z0rlx5672gdlfb3830irk026yfwz8kyp-pnpm-11.22.0/bin/pnpm '' '--reporter=silent' exec eslint --no-warn-ignored || true
   run_hook nixfmt '\.nix$' '^$' 1 0 1 nixfmt /nix/store/958q1ady98nwszsx9z44f1hbk0wid50f-nixfmt-1.4.0/bin/nixfmt '' --check || true
+  run_hook statix '\.nix$' '^$' 0 1 1 statix /nix/store/sr9vqpbax1j8dmf9nvd0zbbjjbm3dxgy-statix-0.5.8-unstable-2026-07-17/bin/statix '' check --ignore 'npins/**' || true
 }
 
 # shellcheck shell=bash
