@@ -4,8 +4,7 @@ Thanks for taking the time to contribute to Nebu!
 
 ## Looking for help?
 
-Join our Matrix room, [#nebu:zirco.dev](https://matrix.to/#/#nebu:zirco.dev)
-([URI](matrix:r/nebu:zirco.dev))!
+Join our Matrix room, [#nebu:zirco.dev](https://matrix.to/#/#nebu:zirco.dev)!
 
 ## Reporting issues
 
@@ -23,6 +22,15 @@ If you're not using Nix, configure Git to use the portable hooks in the `.hooks`
 ```sh
 $ git config core.hooksPath .github/hooks
 ```
+
+### Generative Tools Policy
+
+Due to moral, philosophical, environmental, and quality concerns, contributions to the Nebu project
+must not include any content generated wholly or partially through the use of generative AI or large
+language models. This includes the project itself, its documentation, contents and metadata of
+commits to it, communications surrounding it, and all other related channels.
+
+By [signing off](#sign-off) on a contribution to this repository, you agree to this policy.
 
 ### Code style
 
@@ -44,14 +52,21 @@ follow the following format:
 
 For example: `i2c: virtio: mark device ready before registering the adapter`
 
-### DCO/Sign-Off
+### Sign-Off
 
 The DCO provides a lightweight alternative to a CLA which protects the project, contributors,
 and downstream users from copyright disputes.
 
-All commits must have the `Signed-off-by` trailer indicating you accept the DCO text below.
+All commits to the project must have a `Signed-off-by` trailer. By adding this trailer, you affirm
+that you have read this document and agree to the following:
+
+- Your contribution follows Nebu's [Generative Tools Policy](#generative-tools-policy)
+- You certify your commit under the [Developer Certificate of Origin](#developer-certificate-of-origin)
+  below.
 
 Git can do this for you with the `-s` flag on `git commit`.
+
+#### Developer Certificate of Origin
 
 ```
 Developer Certificate of Origin
