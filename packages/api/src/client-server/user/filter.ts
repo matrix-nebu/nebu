@@ -1,7 +1,7 @@
 import { route } from "../../route.js";
 
 /** A portion of a {@link Filter} representing non-room events. */
-export type EventFilter = {
+export interface EventFilter {
 	/** The maximum number of events to return, must be an integer greater than 0. */
 	limit?: number;
 	/** A list of sender IDs to exclude. If this list is absent then no senders are excluded. */
@@ -19,10 +19,10 @@ export type EventFilter = {
 	 * A `*` can be used as a wildcard to match any sequence of characters.
 	 */
 	types?: string[];
-};
+}
 
 /** A portion of a {@link Filter} representing room events. */
-export type RoomEventFilter = {
+export interface RoomEventFilter {
 	/**
 	 * If true, includes only events with a url key in their content. If false, excludes those
 	 * events. If omitted, url key is not considered for filtering.
@@ -51,10 +51,10 @@ export type RoomEventFilter = {
 	types?: string[];
 	/** If true, enables per-thread notification counts. Only applies to the /sync endpoint. */
 	unread_thread_notifications?: boolean;
-};
+}
 
 /** A portion of a {@link Filter} representing room data. */
-export type RoomFilter = {
+export interface RoomFilter {
 	/** The per user account data to include for rooms. */
 	account_data?: RoomEventFilter;
 	/** The ephemeral events to include for rooms. */
@@ -75,10 +75,10 @@ export type RoomFilter = {
 	state?: RoomEventFilter;
 	/** The message and state update events to include for rooms. */
 	timeline?: RoomEventFilter;
-};
+}
 
 /** A filter which may be used in requests to restrict which events are returned to the client. */
-export type Filter = {
+export interface Filter {
 	/** The user account data that isn’t associated with rooms to include. */
 	account_data?: EventFilter;
 	/**
@@ -101,7 +101,7 @@ export type Filter = {
 	presence?: EventFilter;
 	/** Filters to be applied to room data. */
 	room?: RoomFilter;
-};
+}
 
 export const UploadFilter = route("POST", "/_matrix/client/v3/user/{userId}/filter")
 	.path<{ userId: string }>()

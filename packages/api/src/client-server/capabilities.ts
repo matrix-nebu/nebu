@@ -1,16 +1,16 @@
 import { route } from "../route.js";
 
 /** A capability which can be either enabled or disabled. */
-export type BooleanCapability = {
+export interface BooleanCapability {
 	enabled: boolean;
-};
+}
 
 /**
  * Capability to indicate if the user can perform account moderation actions via server
  * administration endpoints.
  * @addedIn v1.18
  */
-export type AccountModerationCapability = {
+export interface AccountModerationCapability {
 	/**
 	 * `true` if the user can lock a user via `PUT /admin/lock/{userId}`, `false` otherwise.
 	 */
@@ -19,10 +19,10 @@ export type AccountModerationCapability = {
 	 * `true` if the user can suspend a user via `PUT /admin/suspend/{userId}`, `false` otherwise.
 	 */
 	suspend?: boolean;
-};
+}
 
 /** Capability to indicate if the user can set or modify extended profile fields */
-export type ProfileFieldsCapability = {
+export interface ProfileFieldsCapability {
 	/**
 	 * `true` if the user can create, update or delete any profile fields, `false` otherwise.
 	 */
@@ -43,18 +43,18 @@ export type ProfileFieldsCapability = {
 	 * field which is not included in this list.
 	 */
 	disallowed?: string[];
-};
+}
 
 /** The room versions the server supports. */
-export type RoomVersionsCapability = {
+export interface RoomVersionsCapability {
 	/** A detailed description of the room versions the server supports. */
 	supported: string[];
 	/** The default room version the server is using for new rooms. */
 	default: string;
-};
+}
 
 /** Information about the server’s supported feature set and other relevant capabilities. */
-export type Capabilities = {
+export interface Capabilities {
 	/** Capability to indicate if the user can change 3PID associations on their account. */
 	"m.3pid_changes": BooleanCapability;
 	/**
@@ -97,7 +97,7 @@ export type Capabilities = {
 	 * @deprecated
 	 */
 	"m.set_displayname": BooleanCapability;
-};
+}
 
 /** Gets information about the server's supported feature set and other relevant capabilities. */
 export const GetCapabilities = route("GET", "/_matrix/client/v3/capabilities").response<{

@@ -26,12 +26,7 @@ export interface EndpointRequest {
  * @typeParam Body - The type of the request body.
  * @typeParam Response - The type of the response.
  */
-export type Route<
-	Path extends Record<string, unknown>,
-	Query extends Record<string, unknown>,
-	Body,
-	Response = unknown,
-> = {
+export interface Route<Path extends object, Query extends object, Body, Response = unknown> {
 	/** The HTTP method for the route. */
 	readonly method: HttpMethod;
 	/**
@@ -51,15 +46,15 @@ export type Route<
 	readonly __query?: Query;
 	readonly __body?: Body;
 	readonly __response?: Response;
-};
+}
 
-export type RouteInputs<
-	Path extends Record<string, unknown>,
-	Query extends Record<string, unknown>,
-	Body,
-> = ([Path] extends [never] ? {} : { path: Path }) &
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+export type RouteInputs<Path extends object, Query extends object, Body> = ([Path] extends [never]
+	? {}
+	: { path: Path }) &
 	([Query] extends [never] ? {} : { query: Query }) &
 	([Body] extends [never] ? {} : { body: Body });
+/* eslint-enable @typescript-eslint/no-empty-object-type */
 
 /**
  * Builder for creating Nebu routes with type-safe request and response typing.
@@ -70,8 +65,8 @@ export type RouteInputs<
  * @typeParam Response - The type of the response.
  */
 export class RouteBuilder<
-	Path extends Record<string, unknown> = never,
-	Query extends Record<string, unknown> = never,
+	Path extends object = never,
+	Query extends object = never,
 	Body = never,
 	Response = never,
 > implements Route<Path, Query, Body, Response> {
@@ -89,7 +84,7 @@ export class RouteBuilder<
 	 * Set the type of the path parameters for the route.
 	 * @returns A new RouteBuilder instance with the updated path parameter type.
 	 */
-	path<T extends Record<string, unknown>>() {
+	path<T extends object>() {
 		return new RouteBuilder<T, Query, Body, Response>(this.method, this.endpoint);
 	}
 
@@ -97,7 +92,7 @@ export class RouteBuilder<
 	 * Set the type of the query parameters for the route.
 	 * @returns A new RouteBuilder instance with the updated query parameter type.
 	 */
-	query<T extends Record<string, unknown>>() {
+	query<T extends object>() {
 		return new RouteBuilder<Path, T, Body, Response>(this.method, this.endpoint);
 	}
 
@@ -105,7 +100,7 @@ export class RouteBuilder<
 	 * Set the type of the request body for the route.
 	 * @returns A new RouteBuilder instance with the updated request body type.
 	 */
-	body<T extends Record<string, unknown>>() {
+	body<T>() {
 		return new RouteBuilder<Path, Query, T, Response>(this.method, this.endpoint);
 	}
 
@@ -113,7 +108,7 @@ export class RouteBuilder<
 	 * Set the type of the response for the route.
 	 * @returns A new RouteBuilder instance with the updated response type.
 	 */
-	response<T extends Record<string, unknown>>() {
+	response<T>() {
 		return new RouteBuilder<Path, Query, Body, T>(this.method, this.endpoint);
 	}
 
