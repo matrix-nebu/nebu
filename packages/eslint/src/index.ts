@@ -4,18 +4,34 @@ import tseslint from "typescript-eslint";
 import json from "@eslint/json";
 import markdown from "@eslint/markdown";
 import prettier from "eslint-plugin-prettier/recommended";
-import { defineConfig } from "eslint/config";
+import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-	prettier,
+	globalIgnores(["**/dist/**", "**/coverage/**", "**/pnpm-lock.yaml"]),
+
 	{
 		files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
 		plugins: { js },
 		extends: ["js/recommended"],
 		languageOptions: { globals: globals.node },
 	},
-	tseslint.configs.recommended,
+	{
+		files: ["**/*.{ts,mts,cts}"],
+		extends: [tseslint.configs.strictTypeChecked, tseslint.configs.stylisticTypeChecked],
+		languageOptions: {
+			parserOptions: {
+				projectService: true,
+			},
+		},
+	},
+
+	{
+		files: ["**/*.{js,mjs,cjs}", "*.config.{ts,mts,mjs}", "typedoc/**"],
+		extends: [tseslint.configs.disableTypeChecked],
+	},
+
 	{ files: ["**/*.json"], plugins: { json }, language: "json/json", extends: ["json/recommended"] },
+
 	{
 		files: ["**/*.jsonc"],
 		plugins: { json },
@@ -34,9 +50,6 @@ export default defineConfig([
 		language: "markdown/gfm",
 		extends: ["markdown/recommended"],
 	},
-	{
-		rules: {
-			eqeqeq: "error",
-		},
-	},
+
+	prettier,
 ]);
