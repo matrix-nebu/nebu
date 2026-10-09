@@ -44,7 +44,7 @@ mkHooks {
   settings = {
     portable = {
       enable = true;
-      dir = ".hooks";
+      dir = ".github/hooks";
     };
 
     githubActions = {
