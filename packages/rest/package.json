@@ -21,5 +21,8 @@
 	"dependencies": {
 		"@matrix-nebu/types": "workspace:^",
 		"arktype": "^2.2.3"
+	},
+	"devDependencies": {
+		"@matrix-nebu/tests": "workspace:*"
 	}
 }

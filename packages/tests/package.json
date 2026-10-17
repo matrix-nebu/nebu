@@ -1,0 +1,23 @@
+{
+	"name": "@matrix-nebu/tests",
+	"version": "0.1.0",
+	"description": "Internal testing utilities for Nebu",
+	"scripts": {
+		"lint": "eslint src"
+	},
+	"private": true,
+	"type": "module",
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		}
+	},
+	"devDependencies": {
+		"undici": "^8.12.1",
+		"vitest": "^5.0.1"
+	},
+	"peerDependencies": {
+		"vitest": "^5.0.1"
+	}
+}

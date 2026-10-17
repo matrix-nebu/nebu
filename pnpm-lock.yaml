@@ -325,6 +325,10 @@ importers:
       arktype:
         specifier: ^2.2.3
         version: 2.2.3
+    devDependencies:
+      '@matrix-nebu/tests':
+        specifier: workspace:*
+        version: link:../tests
 
   packages/sdk:
     dependencies:
@@ -334,6 +338,15 @@ importers:
       '@matrix-nebu/types':
         specifier: workspace:^
         version: link:../types
+
+  packages/tests:
+    devDependencies:
+      undici:
+        specifier: ^8.12.1
+        version: 8.12.1
+      vitest:
+        specifier: ^5.0.1
+        version: 5.0.1(vite@8.3.0(jiti@2.7.0)(yaml@2.9.0))
 
   packages/types:
     dependencies:
@@ -1336,6 +1349,10 @@ packages:
 
   uc.micro@2.1.0:
     resolution: {integrity: sha512-ARDJmphmdvUk6Glw7y9DQ2bFkKBHwQHLi2lsaH6PPmz/Ka9sFOBsBluozhDltWmnv9u/cF6Rt87znRTPV+yp/A==}
+
+  undici@8.12.1:
+    resolution: {integrity: sha512-usz3OVQBeh1LxNn0DzU0voLXMgn5CU/WUdpBsY6Ti5afNao+vTkmn4H/NxoXolc10cOqe2+YIG0Hspq2rsl64w==}
+    engines: {node: '>=22.19.0'}
 
   unist-util-is@6.0.1:
     resolution: {integrity: sha512-LsiILbtBETkDz8I9p1dQ0uyRUWuaQzd/cuEeS1hoRSyW5E5XGmTzlwY1OrNzzakGowI9Dr/I8HVaw4hTtnxy8g==}
@@ -2601,6 +2618,8 @@ snapshots:
   typescript@6.0.3: {}
 
   uc.micro@2.1.0: {}
+
+  undici@8.12.1: {}
 
   unist-util-is@6.0.1:
     dependencies:
