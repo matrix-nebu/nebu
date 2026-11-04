@@ -1,0 +1,16 @@
+{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"composite": false,
+		"incremental": false,
+		"noEmit": true,
+		"rootDir": ".",
+		"baseUrl": ".",
+		"ignoreDeprecations": "6.0",
+		"lib": ["DOM", "ESNext"],
+		"paths": {
+			"@matrix-nebu/*": ["packages/*/src/index.ts"]
+		}
+	},
+	"include": ["packages/**/*.ts"]
+}
