@@ -18,5 +18,8 @@
 			"types": "./dist/index.d.ts"
 		}
 	},
-	"dependencies": {}
+	"dependencies": {},
+	"devDependencies": {
+		"@matrix-nebu/tests": "workspace:^"
+	}
 }
