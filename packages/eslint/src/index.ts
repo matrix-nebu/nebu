@@ -20,7 +20,8 @@ export default defineConfig([
 		extends: [tseslint.configs.strictTypeChecked, tseslint.configs.stylisticTypeChecked],
 		languageOptions: {
 			parserOptions: {
-				projectService: true,
+				project: "./tsconfig.eslint.json",
+				projectService: false,
 			},
 		},
 	},
