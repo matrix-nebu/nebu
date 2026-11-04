@@ -4,11 +4,14 @@
 		{
 			"path": "./packages/sdk"
 		},
-        {
+		{
 			"path": "./packages/api"
 		},
 		{
 			"path": "./packages/eslint"
-        }
+		},
+		{
+			"path": "./packages/tests"
+		}
 	]
 }
