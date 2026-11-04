@@ -222,7 +222,11 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1(vite@8.3.0(jiti@2.7.0)(yaml@2.9.0))
 
-  packages/api: {}
+  packages/api:
+    devDependencies:
+      '@matrix-nebu/tests':
+        specifier: workspace:^
+        version: link:../tests
 
   packages/eslint:
     dependencies:
@@ -260,6 +264,15 @@ importers:
       '@matrix-nebu/api':
         specifier: workspace:^
         version: link:../api
+
+  packages/tests:
+    devDependencies:
+      undici:
+        specifier: ^8.12.1
+        version: 8.12.3
+      vitest:
+        specifier: ^5.0.1
+        version: 5.0.1(vite@8.3.0(jiti@2.7.0)(yaml@2.9.0))
 
 packages:
 
@@ -1244,6 +1257,10 @@ packages:
 
   uc.micro@2.1.0:
     resolution: {integrity: sha512-ARDJmphmdvUk6Glw7y9DQ2bFkKBHwQHLi2lsaH6PPmz/Ka9sFOBsBluozhDltWmnv9u/cF6Rt87znRTPV+yp/A==}
+
+  undici@8.12.3:
+    resolution: {integrity: sha512-+fdndUTwBP86cVjihTp21hZHo7d6oj1c/47XPA3lL8mM0XHs+C4EkcjmgRsFnFk2f/UONGDy9ItBItmXsLOQHw==}
+    engines: {node: '>=22.19.0'}
 
   unist-util-is@6.0.1:
     resolution: {integrity: sha512-LsiILbtBETkDz8I9p1dQ0uyRUWuaQzd/cuEeS1hoRSyW5E5XGmTzlwY1OrNzzakGowI9Dr/I8HVaw4hTtnxy8g==}
@@ -2493,6 +2510,8 @@ snapshots:
   typescript@6.0.3: {}
 
   uc.micro@2.1.0: {}
+
+  undici@8.12.3: {}
 
   unist-util-is@6.0.1:
     dependencies:
