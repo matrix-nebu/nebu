@@ -1,6 +1,24 @@
 import { type EndpointRequest, type Route, type RouteInputs } from "../route.js";
 import { isMatrixErrorResponse, MatrixError } from "../client-server/error.js";
 
+/** Global options for the REST client. */
+export interface RESTOptions {
+	/** The fetch function to use for requests. */
+	fetch?: typeof globalThis.fetch;
+
+	/** The default timeout for requests. */
+	timeout?: number;
+}
+
+/** Options configurable when calling {@link REST.execute}. */
+export interface RequestOptions {
+	/** An optional AbortSignal to cancel the request. */
+	signal?: AbortSignal;
+
+	/** The timeout for the request. */
+	timeout?: number;
+}
+
 /**
  * REST executor for the Matrix Client-Server API.
  */
@@ -20,19 +38,21 @@ export class REST {
 	 */
 	public accessToken?: string;
 
-	/**
-	 * The fetch function to use for requests.
-	 */
+	/** The fetch function to use for requests. */
 	private readonly fetch: typeof globalThis.fetch;
+
+	/** The default timeout, in milliseconds, for requests. */
+	private readonly timeout?: number;
 
 	/**
 	 * Creates a new REST executor.
 	 * @param baseUrl The homeserver base URL.
-	 * @param accessToken The Matrix access token to use for requests.
+	 * @param options The global options for the REST client.
 	 */
-	constructor(baseUrl: string, fetch: typeof globalThis.fetch = globalThis.fetch) {
+	constructor(baseUrl: string, options: RESTOptions = {}) {
 		this.baseUrl = baseUrl;
-		this.fetch = fetch;
+		this.fetch = options.fetch ?? globalThis.fetch.bind(globalThis);
+		this.timeout = options.timeout;
 	}
 
 	/** Sets the access token for subsequent requests. */
@@ -46,13 +66,22 @@ export class REST {
 	 * @returns The parsed JSON response from the homeserver.
 	 * @throws If the request fails or the response is not valid JSON.
 	 */
-	async execute(request: EndpointRequest): Promise<unknown> {
+	async execute(request: EndpointRequest, options: RequestOptions = {}): Promise<unknown> {
+		const timeout = options.timeout ?? this.timeout;
+		const timeoutSignal = timeout ? AbortSignal.timeout(timeout) : undefined;
+		const signal = options.signal
+			? timeoutSignal
+				? AbortSignal.any([options.signal, timeoutSignal])
+				: options.signal
+			: timeoutSignal;
+
 		const url = new URL(request.path, this.baseUrl);
 
 		const headers = new Headers();
 		const requestOptions: RequestInit = {
 			method: request.method,
 			headers,
+			signal,
 		};
 
 		if (request.method === "POST" || request.method === "PUT" || request.method === "PATCH") {
@@ -101,9 +130,10 @@ export class REST {
 	>(
 		route: Route<Path, Query, Body, Response>,
 		inputs: RouteInputs<Path, Query, Body>,
+		options: RequestOptions = {},
 	): Promise<Response> {
 		const request = route.serialize(inputs);
-		const json = await this.execute(request);
+		const json = await this.execute(request, options);
 		return json as Response;
 	}
 }
