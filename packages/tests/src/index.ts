@@ -1,4 +1,4 @@
-import { MockAgent, getGlobalDispatcher, setGlobalDispatcher } from "undici";
+import { MockAgent, getGlobalDispatcher, setGlobalDispatcher, fetch } from "undici";
 import { afterEach, beforeEach } from "vitest";
 
 type InterceptOptions = Parameters<ReturnType<MockAgent["get"]>["intercept"]>[0];
@@ -28,6 +28,6 @@ export const useHomeserver = () => {
 
 	return {
 		intercept: (options: InterceptOptions) => agent.get(origin).intercept(options),
-		fetch: globalThis.fetch,
+		fetch: fetch as unknown as typeof globalThis.fetch,
 	};
 };
