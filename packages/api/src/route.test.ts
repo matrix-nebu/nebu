@@ -46,4 +46,38 @@ describe("RouteBuilder", () => {
 			path: "/test/a%20b?filter=c%20d",
 		});
 	});
+
+	test("serializes a route with a request body", () => {
+		const E = route("POST", "/test").body<{ name: string }>().response<{ id: string }>();
+
+		const req = E.serialize({
+			body: { name: "test" },
+		});
+
+		expect(req).toEqual({
+			method: "POST",
+			path: "/test",
+			body: { name: "test" },
+		});
+	});
+
+	test("serializes a route with a request body and other parameters", () => {
+		const E = route("POST", "/test/{id}")
+			.path<{ id: string }>()
+			.query<{ filter: string }>()
+			.body<{ name: string }>()
+			.response<{ id: string }>();
+
+		const req = E.serialize({
+			path: { id: "123" },
+			query: { filter: "active" },
+			body: { name: "test" },
+		});
+
+		expect(req).toEqual({
+			method: "POST",
+			path: "/test/123?filter=active",
+			body: { name: "test" },
+		});
+	});
 });
