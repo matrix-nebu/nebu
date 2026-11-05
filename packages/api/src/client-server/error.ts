@@ -101,16 +101,34 @@ export type ErrorCode =
 	| "M_USER_IN_USE"
 	| (string & {});
 
-/** An error returned by the Matrix API. */
-export interface MatrixError {
+/** The common fields in an error returned by the Matrix API. */
+interface BaseMatrixErrorResponse {
 	/** A human-readable error message. */
 	error: string;
 	/** A unique string identifying the error. */
 	errcode: ErrorCode;
 }
 
+/** An error returned by the Matrix API. */
+export class MatrixError extends Error {
+	/** The Matrix API error response that caused this error. */
+	public readonly response: AnyMatrixErrorResponse;
+	/** A human-readable error message. */
+	public readonly error: string;
+	/** A unique string identifying the error. */
+	public readonly errcode: ErrorCode;
+
+	constructor(response: AnyMatrixErrorResponse) {
+		super(response.error);
+		this.name = "MatrixError";
+		this.response = response;
+		this.error = response.error;
+		this.errcode = response.errcode;
+	}
+}
+
 /** The error response for `M_LIMIT_EXCEEDED`. */
-export interface MatrixLimitExceededError extends MatrixError {
+export interface MatrixLimitExceededError extends BaseMatrixErrorResponse {
 	errcode: "M_LIMIT_EXCEEDED";
 	/**
 	 * How long to wait (in milliseconds) before retrying.
@@ -120,21 +138,21 @@ export interface MatrixLimitExceededError extends MatrixError {
 }
 
 /** The error response for `M_RESOURCE_LIMIT_EXCEEDED`. */
-export interface MatrixResourceLimitExceededError extends MatrixError {
+export interface MatrixResourceLimitExceededError extends BaseMatrixErrorResponse {
 	errcode: "M_RESOURCE_LIMIT_EXCEEDED";
 	/** A place the user receiving this error can reach out to. */
 	admin_contact: string;
 }
 
 /** The error response for `M_UNKNOWN_TOKEN`. */
-export interface MatrixUnknownTokenError extends MatrixError {
+export interface MatrixUnknownTokenError extends BaseMatrixErrorResponse {
 	errcode: "M_UNKNOWN_TOKEN";
 	/** True if the client is in soft-logout state. */
 	soft_logout?: boolean;
 }
 
 /** The error response for `M_USER_LIMIT_EXCEEDED`. */
-export interface MatrixUserLimitExceededError extends MatrixError {
+export interface MatrixUserLimitExceededError extends BaseMatrixErrorResponse {
 	errcode: "M_USER_LIMIT_EXCEEDED";
 	/** A URI providing more context on the encountered limit. */
 	info_uri: string;
@@ -142,10 +160,21 @@ export interface MatrixUserLimitExceededError extends MatrixError {
 	can_upgrade?: boolean;
 }
 
-/** The union of all possible error responses from the Matrix API. */
-export type MatrixErrorResponse =
-	| MatrixError
+/** Any possible Matrix error response. */
+export type AnyMatrixErrorResponse =
+	| BaseMatrixErrorResponse
 	| MatrixLimitExceededError
 	| MatrixResourceLimitExceededError
 	| MatrixUnknownTokenError
 	| MatrixUserLimitExceededError;
+
+/** Check if a JSON object is a valid Matrix error response. */
+export function isMatrixErrorResponse(json: unknown): json is AnyMatrixErrorResponse {
+	if (typeof json !== "object" || json === null) {
+		return false;
+	}
+
+	const obj = json as Record<string, unknown>;
+
+	return typeof obj.error === "string" && typeof obj.errcode === "string";
+}
