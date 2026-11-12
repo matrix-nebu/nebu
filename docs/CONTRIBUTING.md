@@ -42,7 +42,7 @@ linting tools.
 Nebu uses [Scoped Commits](https://scopedcommits.com/), so your commit messages should roughly
 follow the following format:
 
-```
+```plain
 <scope>: <description>
 
 [optional body]
@@ -68,7 +68,7 @@ Git can do this for you with the `-s` flag on `git commit`.
 
 #### Developer Certificate of Origin
 
-```
+```plain
 Developer Certificate of Origin
 Version 1.1
 
