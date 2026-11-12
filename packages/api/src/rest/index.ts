@@ -25,10 +25,7 @@ export interface RequestOptions {
 // TODO: This class needs to handle rate limiting, retries, etc.
 export class REST {
 	/**
-	 * The homeserver base URL.
-	 * For endpoints like `https://matrix.example.com/_matrix/client/...`, the base URL is
-	 * `https://matrix.example.com`. If the base URL is a directory, it should end with a trailing
-	 * slash (e.g. `https://example.com/matrix-client/`).
+	 * The base URL to send requests to. For example, `https://matrix-client.matrix.org`.
 	 */
 	public readonly baseUrl: string;
 
@@ -36,7 +33,7 @@ export class REST {
 	 * The Matrix access token to use for requests.
 	 * If unset, requests will be made without authentication.
 	 */
-	public accessToken?: string;
+	private accessToken?: string;
 
 	/** The fetch function to use for requests. */
 	private readonly fetch: typeof globalThis.fetch;
@@ -46,11 +43,20 @@ export class REST {
 
 	/**
 	 * Creates a new REST executor.
-	 * @param baseUrl The homeserver base URL.
+	 * @param baseUrl The base URL to send requests to.
 	 * @param options The global options for the REST client.
+	 *
+	 * @example
+	 * ```ts
+	 * const rest = new REST("https://matrix-client.matrix.org", {
+	 *   timeout: 30000,
+	 * });
+	 * rest.setAccessToken("syt_...");
+	 * ```
 	 */
 	constructor(baseUrl: string, options: RESTOptions = {}) {
-		this.baseUrl = baseUrl;
+		// remove a trailing slash from the base URL if present, to avoid double slashes in requests
+		this.baseUrl = baseUrl.replace(/\/$/, "");
 		this.fetch = options.fetch ?? globalThis.fetch.bind(globalThis);
 		this.timeout = options.timeout;
 	}
@@ -75,7 +81,7 @@ export class REST {
 				: options.signal
 			: timeoutSignal;
 
-		const url = new URL(request.path, this.baseUrl);
+		const url = this.baseUrl + request.path;
 
 		const headers = new Headers();
 		const requestOptions: RequestInit = {
@@ -91,7 +97,7 @@ export class REST {
 
 		if (this.accessToken) headers.set("Authorization", `Bearer ${this.accessToken}`);
 
-		const response = await this.fetch(url.toString(), requestOptions);
+		const response = await this.fetch(url, requestOptions);
 
 		let json: unknown;
 		try {
