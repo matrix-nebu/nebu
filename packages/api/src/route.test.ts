@@ -14,14 +14,11 @@ describe("RouteBuilder", () => {
 	});
 
 	test("serializes a route with path and query parameters", () => {
-		const E = route("GET", "/test/{id}")
-			.path<{ id: string }>()
-			.query<{ filter: string }>()
-			.response<{ bool: boolean }>();
+		const E = route("GET", "/test/{id}").query<{ filter: string }>().response<{ bool: boolean }>();
 
 		const req = E.serialize({
-			path: { id: "123" },
-			query: { filter: "active" },
+			id: "123",
+			filter: "active",
 		});
 
 		expect(req).toEqual({
@@ -31,19 +28,30 @@ describe("RouteBuilder", () => {
 	});
 
 	test("properly URL-escapes path and query parameters", () => {
-		const E = route("GET", "/test/{id}")
-			.path<{ id: string }>()
-			.query<{ filter: string }>()
-			.response<{ bool: boolean }>();
+		const E = route("GET", "/test/{id}").query<{ filter: string }>().response<{ bool: boolean }>();
 
 		const req = E.serialize({
-			path: { id: "a b" },
-			query: { filter: "c d" },
+			id: "a b",
+			filter: "c d",
 		});
 
 		expect(req).toEqual({
 			method: "GET",
 			path: "/test/a%20b?filter=c%20d",
+		});
+	});
+
+	test("serializes a route with a request body", () => {
+		const E = route("POST", "/test").body<{ name: string }>().response<{ id: string }>();
+
+		const req = E.serialize({
+			body: { name: "Alice" },
+		});
+
+		expect(req).toEqual({
+			method: "POST",
+			path: "/test",
+			body: { name: "Alice" },
 		});
 	});
 });
