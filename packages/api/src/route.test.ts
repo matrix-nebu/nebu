@@ -1,7 +1,7 @@
 import { route } from "./route.js";
 import { describe, test, expect } from "vitest";
 
-describe("RouteBuilder", () => {
+describe("Route", () => {
 	test("serializes a simple route with no parameters", () => {
 		const E = route("GET", "/test").response<{ bool: boolean }>();
 

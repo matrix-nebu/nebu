@@ -32,41 +32,6 @@ export interface EndpointRequest {
 }
 
 /**
- * A branded type representing a Nebu route, with type-safe request and response typing.
- * @typeParam E - The string literal for the endpoint URL.
- * @typeParam Query - A record type representing query parameters.
- * @typeParam Body - The type of the request body.
- * @typeParam Response - The type of the response.
- */
-export interface Route<
-	E extends string,
-	// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-	Query extends object = {},
-	Body = never,
-	Response = never,
-> {
-	/** The HTTP method for the route. */
-	readonly method: HttpMethod;
-	/**
-	 * The endpoint URL for the route.
-	 *
-	 * It may contain path parameters that will be substituted when serializing the request.
-	 */
-	readonly endpoint: E;
-
-	/**
-	 * Serialize the route into an {@link EndpointRequest} object.
-	 * @param inputs The inputs to become the request.
-	 */
-	serialize(inputs: RouteInputs<E, Query, Body>): EndpointRequest;
-
-	readonly __path?: E;
-	readonly __query?: Query;
-	readonly __body?: Body;
-	readonly __response?: Response;
-}
-
-/**
  * Builder for creating Nebu routes with type-safe request and response typing.
  *
  * @typeParam E - The endpoint URL for the route.
@@ -74,15 +39,15 @@ export interface Route<
  * @typeParam Body - The type of the request body.
  * @typeParam Response - The type of the response.
  */
-export class RouteBuilder<
+export class Route<
 	E extends string,
 	// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 	Query extends object = {},
 	Body = never,
 	Response = never,
-> implements Route<E, Query, Body, Response> {
+> {
 	/**
-	 * Constructs a new RouteBuilder instance.
+	 * Constructs a new Route instance.
 	 * @param method The HTTP method for the route.
 	 * @param endpoint The endpoint URL for the route.
 	 */
@@ -93,26 +58,26 @@ export class RouteBuilder<
 
 	/**
 	 * Set the type of the query parameters for the route.
-	 * @returns A new RouteBuilder instance with the updated query parameter type.
+	 * @returns A new Route instance with the updated query parameter type.
 	 */
 	query<T extends object>() {
-		return new RouteBuilder<E, T, Body, Response>(this.method, this.endpoint);
+		return new Route<E, T, Body, Response>(this.method, this.endpoint);
 	}
 
 	/**
 	 * Set the type of the request body for the route.
-	 * @returns A new RouteBuilder instance with the updated request body type.
+	 * @returns A new Route instance with the updated request body type.
 	 */
 	body<T>() {
-		return new RouteBuilder<E, Query, T, Response>(this.method, this.endpoint);
+		return new Route<E, Query, T, Response>(this.method, this.endpoint);
 	}
 
 	/**
 	 * Set the type of the response for the route.
-	 * @returns A new RouteBuilder instance with the updated response type.
+	 * @returns A new Route instance with the updated response type.
 	 */
 	response<T>() {
-		return new RouteBuilder<E, Query, Body, T>(this.method, this.endpoint);
+		return new Route<E, Query, Body, T>(this.method, this.endpoint);
 	}
 
 	/**
@@ -148,11 +113,11 @@ export class RouteBuilder<
 }
 
 /**
- * Shorthand for creating a new {@link RouteBuilder} instance.
+ * Shorthand for creating a new {@link Route} instance.
  * @param method The HTTP method for the route.
  * @param endpoint The endpoint URL for the route.
- * @returns A new RouteBuilder instance.
+ * @returns A new Route instance.
  */
-export function route<E extends string>(method: HttpMethod, endpoint: E): RouteBuilder<E> {
-	return new RouteBuilder(method, endpoint);
+export function route<E extends string>(method: HttpMethod, endpoint: E): Route<E> {
+	return new Route(method, endpoint);
 }
