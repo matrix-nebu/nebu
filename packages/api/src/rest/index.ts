@@ -128,14 +128,9 @@ export class REST {
 	 * @returns The parsed JSON response from the homeserver.
 	 * @throws If the request fails or the response is not valid JSON.
 	 */
-	async request<
-		Path extends object = never,
-		Query extends object = never,
-		Body = never,
-		Response = never,
-	>(
-		route: Route<Path, Query, Body, Response>,
-		inputs: RouteInputs<Path, Query, Body>,
+	async request<E extends string, Query extends object = never, Body = never, Response = never>(
+		route: Route<E, Query, Body, Response>,
+		inputs: RouteInputs<E, Query, Body>,
 		options: RequestOptions = {},
 	): Promise<Response> {
 		const request = route.serialize(inputs);

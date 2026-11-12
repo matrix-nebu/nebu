@@ -104,10 +104,10 @@ export interface Filter {
 }
 
 export const UploadFilter = route("POST", "/_matrix/client/v3/user/{userId}/filter")
-	.path<{ userId: string }>()
 	.body<Filter>()
 	.response<{ filter_id: string }>();
 
-export const GetFilter = route("GET", "/_matrix/client/v3/user/{userId}/filter/{filterId}")
-	.path<{ userId: string; filterId: string }>()
-	.response<Filter>();
+export const GetFilter = route(
+	"GET",
+	"/_matrix/client/v3/user/{userId}/filter/{filterId}",
+).response<Filter>();

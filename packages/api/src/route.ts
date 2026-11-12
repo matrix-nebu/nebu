@@ -1,7 +1,19 @@
-/**
- * All possible HTTP methods.
- */
+/** All possible HTTP methods. */
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "OPTIONS" | "HEAD";
+
+/** Extracts the names of all embedded `{pathParameters}` from a {@link Route}'s path string. */
+type ExtractPath<E extends string> = E extends `${string}{${infer P}}${infer Rest}`
+	? P | ExtractPath<Rest>
+	: never;
+
+/** The type of parameters required to be substituted into a {@link Route}'s path string. */
+export type PathParameters<E extends string> = Record<ExtractPath<E>, string>;
+
+/** Get the type of inputs required to serialize a {@link Route} with the given parameters. */
+export type RouteInputs<E extends string, Query extends object, Body> = PathParameters<E> &
+	Query &
+	// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+	([Body] extends [never] ? {} : { body: Body });
 
 /**
  * The serialized HTTP request information produced by an {@link Route} instance after it has
@@ -21,12 +33,18 @@ export interface EndpointRequest {
 
 /**
  * A branded type representing a Nebu route, with type-safe request and response typing.
- * @typeParam Path - A record type representing path parameters.
+ * @typeParam E - The string literal for the endpoint URL.
  * @typeParam Query - A record type representing query parameters.
  * @typeParam Body - The type of the request body.
  * @typeParam Response - The type of the response.
  */
-export interface Route<Path extends object, Query extends object, Body, Response = unknown> {
+export interface Route<
+	E extends string,
+	// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+	Query extends object = {},
+	Body = never,
+	Response = never,
+> {
 	/** The HTTP method for the route. */
 	readonly method: HttpMethod;
 	/**
@@ -34,42 +52,35 @@ export interface Route<Path extends object, Query extends object, Body, Response
 	 *
 	 * It may contain path parameters that will be substituted when serializing the request.
 	 */
-	readonly endpoint: string;
+	readonly endpoint: E;
 
 	/**
 	 * Serialize the route into an {@link EndpointRequest} object.
 	 * @param inputs The inputs to become the request.
 	 */
-	serialize(inputs: RouteInputs<Path, Query, Body>): EndpointRequest;
+	serialize(inputs: RouteInputs<E, Query, Body>): EndpointRequest;
 
-	readonly __path?: Path;
+	readonly __path?: E;
 	readonly __query?: Query;
 	readonly __body?: Body;
 	readonly __response?: Response;
 }
 
-/* eslint-disable @typescript-eslint/no-empty-object-type */
-export type RouteInputs<Path extends object, Query extends object, Body> = ([Path] extends [never]
-	? {}
-	: { path: Path }) &
-	([Query] extends [never] ? {} : { query: Query }) &
-	([Body] extends [never] ? {} : { body: Body });
-/* eslint-enable @typescript-eslint/no-empty-object-type */
-
 /**
  * Builder for creating Nebu routes with type-safe request and response typing.
  *
- * @typeParam Path - A record type representing path parameters.
+ * @typeParam E - The endpoint URL for the route.
  * @typeParam Query - A record type representing query parameters.
  * @typeParam Body - The type of the request body.
  * @typeParam Response - The type of the response.
  */
 export class RouteBuilder<
-	Path extends object = never,
-	Query extends object = never,
+	E extends string,
+	// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+	Query extends object = {},
 	Body = never,
 	Response = never,
-> implements Route<Path, Query, Body, Response> {
+> implements Route<E, Query, Body, Response> {
 	/**
 	 * Constructs a new RouteBuilder instance.
 	 * @param method The HTTP method for the route.
@@ -77,23 +88,15 @@ export class RouteBuilder<
 	 */
 	constructor(
 		readonly method: HttpMethod,
-		readonly endpoint: string,
+		readonly endpoint: E,
 	) {}
-
-	/**
-	 * Set the type of the path parameters for the route.
-	 * @returns A new RouteBuilder instance with the updated path parameter type.
-	 */
-	path<T extends object>() {
-		return new RouteBuilder<T, Query, Body, Response>(this.method, this.endpoint);
-	}
 
 	/**
 	 * Set the type of the query parameters for the route.
 	 * @returns A new RouteBuilder instance with the updated query parameter type.
 	 */
 	query<T extends object>() {
-		return new RouteBuilder<Path, T, Body, Response>(this.method, this.endpoint);
+		return new RouteBuilder<E, T, Body, Response>(this.method, this.endpoint);
 	}
 
 	/**
@@ -101,7 +104,7 @@ export class RouteBuilder<
 	 * @returns A new RouteBuilder instance with the updated request body type.
 	 */
 	body<T>() {
-		return new RouteBuilder<Path, Query, T, Response>(this.method, this.endpoint);
+		return new RouteBuilder<E, Query, T, Response>(this.method, this.endpoint);
 	}
 
 	/**
@@ -109,36 +112,32 @@ export class RouteBuilder<
 	 * @returns A new RouteBuilder instance with the updated response type.
 	 */
 	response<T>() {
-		return new RouteBuilder<Path, Query, Body, T>(this.method, this.endpoint);
+		return new RouteBuilder<E, Query, Body, T>(this.method, this.endpoint);
 	}
 
 	/**
 	 * Serialize the route into an {@link EndpointRequest} object.
 	 * @param inputs The inputs to become the request.
 	 */
-	serialize(inputs: RouteInputs<Path, Query, Body>): EndpointRequest {
-		const { path, query, body } = inputs as {
-			path?: Path;
-			query?: Query;
-			body?: Body;
-		};
+	serialize(inputs: RouteInputs<E, Query, Body>): EndpointRequest {
+		const { body, ...params } = inputs as { body?: Body } & Record<string, unknown>;
 
-		// substitute path parameters in the endpoint URL
-		let url = this.endpoint;
-		if (path) {
-			for (const [key, value] of Object.entries(path)) {
-				url = url.replace(`{${key}}`, encodeURIComponent(String(value)));
-			}
-		}
+		const used = new Set<string>();
 
-		// append query parameters to the URL
-		if (query && Object.keys(query).length > 0) {
-			// use percent encoding, never "+" like URLSearchParams uses
-			const queryString = Object.entries(query)
-				.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
-				.join("&");
-			url += `?${queryString}`;
-		}
+		// Substitute path parameters in the endpoint URL
+		let url = this.endpoint.replace(/\{(\w+)\}/g, (_, key: string) => {
+			used.add(key);
+			return encodeURIComponent(String(params[key]));
+		});
+
+		// The remaining top-level keys in `inputs`, excluding `body`, are embedded as query
+		// parameters.
+		const query = Object.entries(params)
+			.filter(([key, value]) => !used.has(key) && value !== undefined)
+			.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
+			.join("&");
+
+		if (query) url += `?${query}`;
 
 		return {
 			method: this.method,
@@ -154,11 +153,6 @@ export class RouteBuilder<
  * @param endpoint The endpoint URL for the route.
  * @returns A new RouteBuilder instance.
  */
-export function route<
-	Path extends object = never,
-	Query extends object = never,
-	Body = never,
-	Response = never,
->(method: HttpMethod, endpoint: string): RouteBuilder<Path, Query, Body, Response> {
+export function route<E extends string>(method: HttpMethod, endpoint: E): RouteBuilder<E> {
 	return new RouteBuilder(method, endpoint);
 }
