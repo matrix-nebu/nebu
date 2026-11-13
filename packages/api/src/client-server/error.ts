@@ -18,7 +18,6 @@ export type ErrorCode =
 	| "M_UNKNOWN"
 	/**
 	 * The device ID supplied by the application service does not belong to the user ID asserted
-	 * @addedIn v1.17
 	 */
 	| "M_UNKNOWN_DEVICE"
 	/** The access or refresh token specified was not recognised. */
@@ -32,7 +31,6 @@ export type ErrorCode =
 	/**
 	 * The request cannot be completed because the user has exceeded (or the request would cause
 	 * them to exceed) a limit associated with their account.
-	 * @addedIn v1.18
 	 */
 	| "M_USER_LIMIT_EXCEEDED"
 	/** The account has been locked and cannot be used at this time. */
@@ -102,7 +100,7 @@ export type ErrorCode =
 	| (string & {});
 
 /** The common fields in an error returned by the Matrix API. */
-interface BaseMatrixErrorResponse {
+export interface BaseMatrixErrorResponse {
 	/** A human-readable error message. */
 	error: string;
 	/** A unique string identifying the error. */

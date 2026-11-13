@@ -2,7 +2,7 @@
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "OPTIONS" | "HEAD";
 
 /** Extracts the names of all embedded `{pathParameters}` from a {@link Route}'s path string. */
-type ExtractPath<E extends string> = E extends `${string}{${infer P}}${infer Rest}`
+export type ExtractPath<E extends string> = E extends `${string}{${infer P}}${infer Rest}`
 	? P | ExtractPath<Rest>
 	: never;
 
