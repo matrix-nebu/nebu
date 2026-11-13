@@ -2,14 +2,20 @@
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "OPTIONS" | "HEAD";
 
 /** Extracts the names of all embedded `{pathParameters}` from a {@link Route}'s path string. */
-export type ExtractPath<E extends string> = E extends `${string}{${infer P}}${infer Rest}`
+type ExtractPath<E extends string> = E extends `${string}{${infer P}}${infer Rest}`
 	? P | ExtractPath<Rest>
 	: never;
 
-/** The type of parameters required to be substituted into a {@link Route}'s path string. */
+/**
+ * The type of parameters required to be substituted into a {@link Route}'s path string.
+ * @internal
+ */
 export type PathParameters<E extends string> = Record<ExtractPath<E>, string>;
 
-/** Get the type of inputs required to serialize a {@link Route} with the given parameters. */
+/**
+ * Get the type of inputs required to serialize a {@link Route} with the given parameters.
+ * @internal
+ */
 export type RouteInputs<E extends string, Query extends object, Body> = PathParameters<E> &
 	Query &
 	// eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -46,6 +52,17 @@ export class Route<
 	Body = never,
 	Response = never,
 > {
+	/** The type of path parameters for the route. */
+	declare public readonly Path: PathParameters<E>;
+	/** The type of query parameters for the route. */
+	declare public readonly Query: Query;
+	/** The type of the request body for the route. */
+	declare public readonly Body: Body;
+	/** The type of the response for the route. */
+	declare public readonly Response: Response;
+	/** The type of all inputs to request this route. */
+	declare public readonly Inputs: RouteInputs<E, Query, Body>;
+
 	/**
 	 * Constructs a new Route instance.
 	 * @param method The HTTP method for the route.

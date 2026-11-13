@@ -9,6 +9,7 @@ const config = {
 
 	packageOptions: {
 		blockTags: [...OptionDefaults.blockTags, "@addedIn"],
+		excludeInternal: true,
 	},
 };
 
