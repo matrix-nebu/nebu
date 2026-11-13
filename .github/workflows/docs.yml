@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  build-docs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -48,7 +48,7 @@ jobs:
         with:
           path: ./typedoc-docs
 
-  deploy:
+  deploy-docs:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
