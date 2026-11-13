@@ -1,1 +1,1 @@
-export * from "./whoami.js";
+export * as whoami from "./whoami.js";

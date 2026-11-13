@@ -1,5 +1,5 @@
 import { type EndpointRequest, type Route, type RouteInputs } from "../route.js";
-import { isMatrixErrorResponse, MatrixError } from "../client-server/error.js";
+import { isMatrixErrorResponse, MatrixError } from "../error.js";
 
 /** Global options for the REST client. */
 export interface RESTOptions {

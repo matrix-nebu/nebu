@@ -1,5 +1,4 @@
-export * from "./error.js";
-export * from "./versions.js";
-export * from "./capabilities.js";
-export * from "./account/index.js";
-export * from "./user/index.js";
+export * as versions from "./versions.js";
+export * as capabilities from "./capabilities.js";
+export * as account from "./account/index.js";
+export * as user from "./user/index.js";
