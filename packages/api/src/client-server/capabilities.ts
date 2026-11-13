@@ -78,7 +78,7 @@ export interface Capabilities {
 	/**
 	 * Capability to indicate if the user can set or modify extended profile fields
 	 *
-	 * If absent, assume they are supported, assuming {@link VersionsResponse} indicates support.
+	 * If absent, assume they are supported, assuming the unstable features indicate support.
 	 *
 	 * @addedIn v1.16
 	 */
