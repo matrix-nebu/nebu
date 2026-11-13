@@ -50,7 +50,7 @@ jobs:
 
   deploy-docs:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    needs: build
+    needs: build-docs
     runs-on: ubuntu-latest
 
     environment:
