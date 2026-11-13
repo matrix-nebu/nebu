@@ -195,7 +195,7 @@ describe("REST", () => {
 				path: "/_matrix/client/versions",
 			}).reply(200, { versions: ["v1.19"] });
 
-			await expect(rest.request(routes.versions.GetVersions, {})).resolves.toEqual({
+			await expect(rest.request(routes.GetVersions, {})).resolves.toEqual({
 				versions: ["v1.19"],
 			});
 		});

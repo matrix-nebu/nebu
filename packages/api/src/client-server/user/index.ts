@@ -1,1 +1,1 @@
-export * as filter from "./filter.js";
+export * from "./filter.js";
