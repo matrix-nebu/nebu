@@ -1,6 +1,6 @@
 import { vi, describe, expect, test, beforeEach, afterEach } from "vitest";
 import { origin, useHomeserver } from "@matrix-nebu/tests";
-import { MatrixError, type EndpointRequest, GetVersions } from "../index.js";
+import { MatrixError, type EndpointRequest, routes } from "../index.js";
 import { REST } from "./index.js";
 
 const hs = useHomeserver();
@@ -195,7 +195,9 @@ describe("REST", () => {
 				path: "/_matrix/client/versions",
 			}).reply(200, { versions: ["v1.19"] });
 
-			await expect(rest.request(GetVersions, {})).resolves.toEqual({ versions: ["v1.19"] });
+			await expect(rest.request(routes.versions.GetVersions, {})).resolves.toEqual({
+				versions: ["v1.19"],
+			});
 		});
 	});
 });
