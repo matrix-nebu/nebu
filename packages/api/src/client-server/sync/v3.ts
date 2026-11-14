@@ -1,7 +1,8 @@
 import { route } from "../../route.js";
-import { events, type PresenceState } from "../../index.js";
+import type { events, PresenceState } from "../../index.js";
 
-interface ListOfEvents<T> {
+/** @internal */
+export interface ListOfEvents<T> {
 	/** List of new events. */
 	events: T[];
 }
