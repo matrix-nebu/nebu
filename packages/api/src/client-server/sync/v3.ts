@@ -1,10 +1,10 @@
 import { route } from "../../route.js";
 import { events, type PresenceState } from "../../index.js";
 
-type ListOfEvents<T> = {
+interface ListOfEvents<T> {
 	/** List of new events. */
 	events: T[];
-};
+}
 
 /** The global private data created by this user. */
 export interface SyncAccountData {
@@ -39,6 +39,32 @@ export interface SyncInviteRoom {
 	invite_state: ListOfEvents<events.StateEvent>;
 }
 
+/** Information on a room the client may use to generate a preview of it. */
+export interface SyncSummary {
+	/** Users which can be used to generate a room name. */
+	"m.heroes"?: string[];
+	/** The number of users with `membership` of `invite`. */
+	"m.invited_member_count"?: number;
+	/** The number of users with `membership` of `join`, including the user themselves. */
+	"m.joined_member_count"?: number;
+}
+
+/** New messages in the room. */
+export interface SyncTimeline extends ListOfEvents<events.ClientEventWithoutRoomId> {
+	/** True of the number of events returned was limited by the filter `limit`. */
+	limited?: boolean;
+	/** A token that can be applied to GET /messages to retrieve earlier events. */
+	prev_batch?: string;
+}
+
+/** Counts of unread notifications for a room. */
+export interface SyncUnreadNotifications {
+	/** The number of unreads with the highlight flag set. */
+	highlight_count?: number;
+	/** The number of unreads. */
+	notification_count?: number;
+}
+
 /** Information on a room that the user has joined. */
 export interface SyncJoinRoom {
 	/** The room's account data updates. */
@@ -52,7 +78,7 @@ export interface SyncJoinRoom {
 	 * State updates for m.room.member events will be incomplete if lazy_load_members is true.
 	 * Omitted if `use_state_after` is true.
 	 */
-	state?: SyncState;
+	state?: ListOfEvents<events.ClientStateEventWithoutRoomId>;
 	/**
 	 * Updates to the state, between `since` and the **end** of the timeline.
 	 * If `full_state` is true, this will be the full state of the room up to the end of the
@@ -60,7 +86,7 @@ export interface SyncJoinRoom {
 	 * State updates for m.room.member events will be incomplete if lazy_load_members is true.
 	 * Required if `use_state_after` is true.
 	 */
-	state_after?: SyncState;
+	state_after?: ListOfEvents<events.ClientStateEventWithoutRoomId>;
 	/** Information about the room clients may need to render it to users. */
 	summary?: SyncSummary;
 	/** The timeline of messages and other events in the room. */
@@ -71,16 +97,34 @@ export interface SyncJoinRoom {
 	unread_thread_notifications?: Record<string, SyncUnreadNotifications>;
 }
 
-/** Information on a room that the user has knocked upon. */
+/** Information on a room that the user has knocked on. */
 export interface SyncKnockRoom {
-	/** The room's information. */
-	room: events.RoomEvent;
+	/** The stripped state of the room. */
+	knock_state: ListOfEvents<events.StateEvent>;
 }
 
 /** Information on a room that the user has left or been banned from. */
 export interface SyncLeaveRoom {
-	/** The room's information. */
-	room: events.RoomEvent;
+	/** The room's account data updates. */
+	account_data?: SyncAccountData;
+	/**
+	 * Updates to the state, between `since` and the start of the timeline.
+	 * If `full_state` is true, this will be the full state of the room up to the start of the
+	 * timeline.
+	 * State updates for m.room.member events will be incomplete if lazy_load_members is true.
+	 * Omitted if `use_state_after` is true.
+	 */
+	state?: ListOfEvents<events.ClientStateEventWithoutRoomId>;
+	/**
+	 * Updates to the state, between `since` and the **end** of the timeline.
+	 * If `full_state` is true, this will be the full state of the room up to the end of the
+	 * timeline.
+	 * State updates for m.room.member events will be incomplete if lazy_load_members is true.
+	 * Required if `use_state_after` is true.
+	 */
+	state_after?: ListOfEvents<events.ClientStateEventWithoutRoomId>;
+	/** The timeline of messages and other events in the room, up until their leave/ban. */
+	timeline?: SyncTimeline;
 }
 
 /**

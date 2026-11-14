@@ -1,4 +1,4 @@
-import type { PresenceState } from "../types/index.js";
+import type { PresenceState, RoomMembershipState } from "../types/index.js";
 
 /** An event. */
 export interface BaseEvent {
@@ -27,6 +27,22 @@ export type ToDeviceEvent = MessageLikeEvent;
 /** An EDU (typing/receipts). */
 export type EphemeralEvent = MessageLikeEvent;
 
+/** Additional info on events. */
+export interface UnsignedData<StateEventType extends StateEvent = never> {
+	/** The time in ms since the event was sent. */
+	age?: number;
+	/** The room membership of the requesting user at the time of the event. */
+	membership?: RoomMembershipState;
+	/** The `content` of the previous state event replaced by the event. */
+	prev_content?: StateEventType extends never ? undefined : StateEventType["content"];
+	/** The event that redacted this event, if any. */
+	redacted_because?: RedactionEvent;
+	/** The event ID of the state event this event replaced. */
+	replaces_state?: StateEventType extends never ? undefined : string;
+	/** The client supplied txn ID. */
+	transaction_id?: string;
+}
+
 /** A client event. */
 export interface ClientMessageLikeEventWithoutRoomId extends MessageLikeEvent {
 	event_id: string;
@@ -39,10 +55,11 @@ export interface ClientMessageLikeEvent extends ClientMessageLikeEventWithoutRoo
 export interface ClientStateEventWithoutRoomId extends StateEvent {
 	event_id: string;
 	origin_server_ts: number;
-	unsigned?: UnsignedData;
+	unsigned?: UnsignedData<ClientStateEventWithoutRoomId>;
 }
 export interface ClientStateEvent extends ClientStateEventWithoutRoomId {
 	room_id: string;
+	unsigned?: UnsignedData<ClientStateEvent>;
 }
 export type ClientEventWithoutRoomId =
 	ClientMessageLikeEventWithoutRoomId | ClientStateEventWithoutRoomId;
@@ -58,6 +75,14 @@ export interface PresenceEvent extends MessageLikeEvent {
 		last_active_ago: number;
 		presence: PresenceState;
 		status_msg?: string;
+	};
+}
+
+export interface RedactionEvent extends MessageLikeEvent {
+	redacts: string;
+	content: {
+		reason?: string;
+		redacts?: string;
 	};
 }
 
