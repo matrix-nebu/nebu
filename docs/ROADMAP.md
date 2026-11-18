@@ -17,11 +17,11 @@ The objective of this phase is to establish solid foundations to build off of, i
 REST client, sync loop, and event sending.
 
 - [x] Configure further infra for contributors: CI, ESLint, precommit hooks, whatever is needed.
-- [ ] Determine how endpoint-level tests will be written (js-sdk uses a set of request/response
+- [x] Determine how endpoint-level tests will be written (js-sdk uses a set of request/response
       pairs which must match, that feels messy)
-- [ ] Get rid of the mess LogN started working on
+- [x] Get rid of the mess LogN started working on
 - [ ] Support policy for unstable features/MSCs
-- [ ] REST client with error handling, and a clean way to define endpoints
+- [x] REST client with error handling, and a clean way to define endpoints
 - [ ] Initial batch of key endpoints: `/versions`, `/capabilities`, `/account/whoami`, v3 `/sync`,
       `/rooms/.../send`, `/rooms/.../state` and `/rooms/.../redact`.
 - [ ] Initial `Client` event emitter, and abstractions around it for receiving and sending events
